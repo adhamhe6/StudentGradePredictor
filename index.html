@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Grade Predictor</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f4f6f9;
+            display: flex;
+            justify-content: center;
+            align-items: start;
+            height: 100vh;
+            padding: 10px;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background: #fff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            color: #333;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        .form-group input, .form-group select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        /* to make buttons beside each other on the same row
+        .buttons {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+        }
+        .btn {
+            width: 48%; 
+            padding: 10px;
+        */
+        .btn {
+            padding: 12px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+        }
+        .btn:hover {
+            background: #45a049;
+            transform: scale(1.02);
+        }
+        .reset-btn {
+            background: #e74c3c;
+        }
+        .reset-btn:hover {
+            background: #c0392b;
+        }
+        .result {
+            text-align: center;
+            font-size: 18px;
+            color: #333;
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 6px;
+            background-color: #e0f7fa;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Student Grade Predictor</h1>
+
+    <div class="form-group">
+        <label for="Age">Age (15-18)</label>
+        <input type="number" id="Age" min="15" max="18" required>
+    </div>
+
+    <div class="form-group">
+        <label for="Gender">Gender</label>
+        <select id="Gender">
+            <option value="0">Male</option>
+            <option value="1">Female</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="Ethnicity">Ethnicity</label>
+        <select id="Ethnicity">
+            <option value="0">Caucasian</option>
+            <option value="1">African American</option>
+            <option value="2">Asian</option>
+            <option value="3">Other</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="ParentalEducation">Parental Education Level</label>
+        <select id="ParentalEducation">
+            <option value="0">None</option>
+            <option value="1">High School</option>
+            <option value="2">Some College</option>
+            <option value="3">Bachelor's</option>
+            <option value="4">Higher</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="StudyTimeWeekly">Study Time Weekly (hours)</label>
+        <input type="number" id="StudyTimeWeekly" min="0" max="20" required>
+    </div>
+
+    <div class="form-group">
+        <label for="Absences">Absences (0-30)</label>
+        <input type="number" id="Absences" min="0" max="30" required>
+    </div>
+
+    <div class="form-group">
+        <label for="Tutoring">Tutoring</label>
+        <select id="Tutoring">
+            <option value="0">No</option>
+            <option value="1">Yes</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="ParentalSupport">Parental Support</label>
+        <select id="ParentalSupport">
+            <option value="0">None</option>
+            <option value="1">Low</option>
+            <option value="2">Medium</option>
+            <option value="3">High</option>
+            <option value="4">Very High</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="Extracurricular">Extracurricular Activities</label>
+        <select id="Extracurricular">
+            <option value="0">No</option>
+            <option value="1">Yes</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="Sports">Sports</label>
+        <select id="Sports">
+            <option value="0">No</option>
+            <option value="1">Yes</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="Music">Music</label>
+        <select id="Music">
+            <option value="0">No</option>
+            <option value="1">Yes</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="Volunteering">Volunteering</label>
+        <select id="Volunteering">
+            <option value="0">No</option>
+            <option value="1">Yes</option>
+        </select>
+    </div>
+
+    <div class="buttons">
+        <button class="btn" onclick="predictGrade()">Predict Grade</button>
+        <button class="btn reset-btn" onclick="resetFields()">Reset</button>
+    </div>
+
+    <div class="result" id="result"></div>
+</div>
+
+<script>
+    async function predictGrade() {
+        const inputs = {
+            Age: document.getElementById('Age').value,
+            Gender: document.getElementById('Gender').value,
+            Ethnicity: document.getElementById('Ethnicity').value,
+            ParentalEducation: document.getElementById('ParentalEducation').value,
+            StudyTimeWeekly: document.getElementById('StudyTimeWeekly').value,
+            Absences: document.getElementById('Absences').value,
+            Tutoring: document.getElementById('Tutoring').value,
+            ParentalSupport: document.getElementById('ParentalSupport').value,
+            Extracurricular: document.getElementById('Extracurricular').value,
+            Sports: document.getElementById('Sports').value,
+            Music: document.getElementById('Music').value,
+            Volunteering: document.getElementById('Volunteering').value,
+        };
+
+        try {
+            const response = await fetch(`http://127.0.0.1:8000/predict?` + new URLSearchParams(inputs));
+            const data = await response.json();
+            document.getElementById('result').innerText = "Predicted Grade: " + data["Predicted Grade"];
+        } catch (error) {
+            document.getElementById('result').innerText = "Error: Unable to get prediction";
+        }
+    }
+
+    function resetFields() {
+        document.querySelectorAll('input, select').forEach(input => input.value = '');
+        document.getElementById('result').innerText = '';
+    }
+</script>
+
+</body>
+</html>
